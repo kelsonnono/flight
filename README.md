@@ -22,3 +22,11 @@ cd <repository-name>
 npm i
 npm run dev
 ```
+
+## Static SPA build & Vercel
+
+This is a plain Vite + React single-page app with React Router (`/`, `/auth`, `/signup`, `/app`).
+
+- `npm run build` → static files in `dist/`; `npm run preview` serves them with SPA fallback.
+- `vercel.json` sets the Vite preset, `dist/` output, and rewrites every path to `/index.html` so deep links like `/app` resolve client-side (HTTP 200).
+- Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` in Vercel, then redeploy. Only the publishable key belongs in the browser.

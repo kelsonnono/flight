@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react';
-import { Link, useNavigate } from '@tanstack/react-router';
+import { Link, useNavigate } from 'react-router';
 import { ArrowRight, Eye, EyeOff, LoaderCircle, LockKeyhole } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,7 +21,7 @@ export function AuthForm({ signup = false }: { signup?: boolean }) {
         : await supabase.auth.signInWithPassword({ email: email.trim(), password });
       if (result.error) { setError(result.error.message); return; }
       if (!result.data.session) { setNotice('Check your email to confirm your account. 請至信箱確認帳號。'); return; }
-      await navigate({ to: '/app', replace: true });
+      await navigate('/app', { replace: true });
     } catch { setError('Unable to connect. Please try again.'); }
     finally { setPending(false); }
   }

@@ -1,7 +1,7 @@
-import { Link } from '@tanstack/react-router';
+import { Link } from 'react-router';
 import { ArrowUpRight, Plane, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useAccount } from '@/routes/__root';
+import { useAccount } from '@/hooks/use-account';
 
 export function SiteHeader() {
   const { user, signOut } = useAccount();

@@ -1,18 +1,44 @@
-import { QueryClient } from "@tanstack/react-query";
-import { createRouter } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
+import { createBrowserRouter, redirect, type RouteObject } from "react-router";
 
-export const getRouter = () => {
-  // One client per request: a module-level QueryClient leaks cached data between SSR requests.
-  const queryClient = new QueryClient();
+import { supabase } from "@/integrations/supabase/client";
+import { RootLayout } from "@/components/RootLayout";
+import { RouteErrorPage, NotFoundPage } from "@/components/RoutePages";
+import { IndexPage } from "@/pages/IndexPage";
+import { AuthPage } from "@/pages/AuthPage";
+import { SignupPage } from "@/pages/SignupPage";
+import { DashboardPage } from "@/pages/DashboardPage";
 
-  const router = createRouter({
-    routeTree,
-    context: { queryClient },
-    scrollRestoration: true,
-    // Lets Query own freshness; set caching defaults on the QueryClient, not the router.
-    defaultPreloadStaleTime: 0,
-  });
+/** Sign-in / sign-up pages: a visitor who is already signed in goes straight to /app. */
+export async function redirectSignedInUser() {
+  const { data } = await supabase.auth.getUser();
+  if (data.user) throw redirect("/app");
+  return null;
+}
 
-  return router;
-};
+/** Private pages: validate the browser-owned session before rendering, else send to /auth. */
+export async function requireUser() {
+  const { data, error } = await supabase.auth.getUser();
+  if (error || !data.user) throw redirect("/auth");
+  return { user: data.user };
+}
+
+export const routes: RouteObject[] = [
+  {
+    id: "root",
+    element: <RootLayout />,
+    errorElement: <RouteErrorPage />,
+    children: [
+      { index: true, element: <IndexPage /> },
+      { path: "auth", loader: redirectSignedInUser, element: <AuthPage /> },
+      { path: "signup", loader: redirectSignedInUser, element: <SignupPage /> },
+      {
+        id: "authenticated",
+        loader: requireUser,
+        children: [{ path: "app", element: <DashboardPage /> }],
+      },
+      { path: "*", element: <NotFoundPage /> },
+    ],
+  },
+];
+
+export const router = createBrowserRouter(routes);
