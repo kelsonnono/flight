@@ -235,13 +235,25 @@
 .dashboard { padding-top: 65px; min-height: calc(100svh - 151px); padding-bottom: 55px; }
 .dashboard > h1 { overflow-wrap: anywhere; font-size: 32px; margin-top: 18px; margin-bottom: 13px; font-weight: 550; }
 .dashboard > p { font-size: 14px; }
-.dashboard-coming { position: relative; isolation: isolate; margin-top: 40px; min-height: 465px; overflow: hidden; }
-.dashboard-coming > img { position: absolute; inset: 0; z-index: -2; object-fit: cover; width: 100%; height: 100%; }
-.dashboard-coming::before { content: ''; position: absolute; inset: 0; z-index: -1; background: var(--hero-scrim); }
-.dashboard-coming-content { padding: 45px; max-width: 630px; }
-.dashboard-coming h2 { font-size: 40px; line-height: 1.2; margin-top: 13px; margin-bottom: 22px; font-weight: 550; }
-.dashboard-coming p { font-size: 13px; line-height: 1.9; margin-top: 12px; }
-.coming-label { display: inline-flex; align-items: center; gap: 9px; font-size: 12px; color: var(--soft-accent); margin-top: 24px; }
+.plans { margin-top: 44px; }
+.plans-head h2 { font-size: 26px; font-weight: 550; margin-top: 10px; margin-bottom: 10px; }
+.plans-head p { font-size: 13px; line-height: 1.8; }
+.plans-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 28px; }
+.plan-card { border: 1px solid var(--border); background: var(--card); border-radius: 4px; padding: 30px; animation: reveal 0.5s ease both; }
+.plan-card.is-subscribed { border-color: color-mix(in oklch, var(--soft-accent) 45%, var(--border)); }
+.plan-card-top { display: flex; align-items: flex-start; justify-content: space-between; }
+.plan-card-top .auth-icon { margin-bottom: 18px; }
+.plan-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: var(--soft-accent); border: 1px solid color-mix(in oklch, var(--soft-accent) 40%, transparent); border-radius: 999px; padding: 4px 10px; }
+.plan-card h3 { font-size: 24px; font-weight: 550; margin-top: 8px; }
+.plan-card > p { font-size: 12px; margin-top: 4px; }
+.plan-card .plan-hint { margin-top: 16px; color: var(--muted-foreground); }
+.plan-current { display: inline-flex; align-items: center; gap: 7px; color: var(--soft-accent); margin-top: 8px; }
+.plan-card form label { display: block; margin-top: 22px; margin-bottom: 8px; font-size: 12px; }
+.plan-form-row { display: flex; gap: 10px; }
+.plan-form-row input { height: 42px; background: var(--background); font-size: 13px; }
+.plan-form-row button { height: 42px; flex-shrink: 0; }
+.plan-message { font-size: 12px; line-height: 1.7; margin-top: 12px; color: var(--status); }
+.plan-message.is-error { color: var(--destructive); }
 @keyframes reveal { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 @media (min-width: 1600px) { .travel-hero { height: 690px; } .hero-content { padding-top: 90px; } }
 @media (max-width: 900px) { .site-container { width: calc(100% - 48px); } .feature-card { padding: 20px; } .feature-card h3 { font-size: 18px; } .feature-card h4 { font-size: 11px; } .auth-main { grid-template-columns: 1fr 380px; gap: 35px; } .auth-intro h1 { font-size: 34px; } }
@@ -249,5 +261,5 @@
  .site-container { width: calc(100% - 40px); } .site-header { height: 74px; } .brand { font-size: 12px; gap: 7px; } .brand-mark { height: 29px; width: 29px; } .brand-mark svg { width: 18px; } .header-actions a, .header-actions button { font-size: 10px; padding-inline: 10px; height: 34px; } .header-actions { gap: 3px; } .header-actions a svg { display: none; }
  .travel-hero { height: 625px; } .hero-photo { object-position: 64% center; } .hero-content { padding-top: 57px; } .hero-kicker { font-size: 8px; } .hero-content h1 { font-size: 51px; margin-top: 25px; } .title-arrow { width: 42px; height: 42px; right: -49px; bottom: 7px; } .hero-description { margin-top: 30px; } .hero-description h2 { font-size: 18px; } .hero-description p { font-size: 12px; } .mobile-break { display: block; } .hero-cta { margin-top: 28px; height: 45px; } .hero-bottom { bottom: 24px; font-size: 8px; } .destination-label { gap: 7px; }
  .features-section { padding-top: 31px; } .section-heading { display: block; margin-bottom: 24px; } .section-heading h2 { font-size: 23px; } .section-heading > p { margin-top: 12px; } .section-heading > p br { display: none; } .feature-grid { grid-template-columns: 1fr; gap: 14px; } .feature-card { padding: 25px; } .feature-card-top { margin-bottom: 22px; } .feature-card h3 { font-size: 21px; } .feature-card h4 { font-size: 12px; } .feature-card > p { min-height: 0; } .feature-note { margin-top: 22px; } .closing-line { padding-block: 30px; } .closing-line p span { display: block; margin: 5px 0 0; } .site-footer { font-size: 9px; padding-block: 20px; } .site-footer > span:last-child { display: none; }
- .auth-main { grid-template-columns: 1fr; gap: 30px; padding-block: 40px; } .auth-intro h1 { font-size: 34px; margin: 14px 0; } .auth-intro p:last-child { display: none; } .auth-panel { padding: 26px; } .dashboard { padding-top: 40px; } .dashboard > h1 { font-size: 25px; } .dashboard-coming-content { padding: 28px; } .dashboard-coming h2 { font-size: 31px; } .dashboard-coming { min-height: 490px; } }
+ .auth-main { grid-template-columns: 1fr; gap: 30px; padding-block: 40px; } .auth-intro h1 { font-size: 34px; margin: 14px 0; } .auth-intro p:last-child { display: none; } .auth-panel { padding: 26px; } .dashboard { padding-top: 40px; } .dashboard > h1 { font-size: 25px; } .plans-grid { grid-template-columns: 1fr; gap: 14px; } .plan-card { padding: 24px; } .plans-head h2 { font-size: 21px; } .plan-form-row { flex-direction: column; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
