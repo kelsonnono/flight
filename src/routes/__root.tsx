@@ -8,7 +8,10 @@ import {
   Scripts,
   type ErrorComponentProps,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import type { User } from '@supabase/supabase-js';
+import { supabase } from '@/integrations/supabase/client';
+import { SiteHeader } from '@/components/SiteHeader';
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -81,14 +84,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Flight Price Notifier" },
+      { name: "description", content: "Your budget. Your next destination. 機票降價通知。" },
+      { property: "og:title", content: "Flight Price Notifier" },
+      { property: "og:description", content: "Your budget. Your next destination." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
@@ -96,6 +97,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;550;600;650;700;750;800&display=swap' },
     ],
   }),
   shellComponent: RootShell,
@@ -118,13 +120,39 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+const AccountContext = createContext<{ user: User | null; signOut: () => Promise<void> }>({ user: null, signOut: async () => {} });
+export function useAccount() { return useContext(AccountContext); }
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const router = useRouter();
+  const [user, setUser] = useState<User | null>(null);
+  useEffect(() => {
+    let active = true;
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (active) setUser(session?.user ?? null);
+      if (!['SIGNED_IN', 'SIGNED_OUT', 'USER_UPDATED'].includes(event)) return;
+      void router.invalidate();
+      if (event !== 'SIGNED_OUT') void queryClient.invalidateQueries();
+    });
+    void supabase.auth.getUser().then(({ data }) => { if (active) setUser(data.user); });
+    return () => { active = false; subscription.unsubscribe(); };
+  }, [queryClient, router]);
+  async function signOut() {
+    await queryClient.cancelQueries(); queryClient.clear();
+    const { error } = await supabase.auth.signOut();
+    if (error) return;
+    setUser(null);
+    await router.navigate({ to: '/auth', replace: true });
+  }
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+      <AccountContext.Provider value={{ user, signOut }}>
+      <SiteHeader/>
       <Outlet />
+      <footer className="site-footer site-container"><span>© 2026 Flight Price Notifier</span><span>Made for your next adventure. <span className="footer-star">✦</span></span></footer>
+      </AccountContext.Provider>
     </QueryClientProvider>
   );
 }

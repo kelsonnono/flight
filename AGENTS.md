@@ -28,3 +28,8 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Use the integration client for email accounts and a single root auth subscriber; this keeps header state synchronized without competing listeners.
+- Keep private pages under the client-only `_authenticated` layout, validating the user before load; browser-owned sessions cannot be validated during SSR.
+- Use PascalCase for new shared component filenames; framework route and supplied design-system filenames retain their required conventions.
+- Keep all presentation tokens and reusable page styling in `src/styles.css`; shared styles keep the dark travel identity consistent.
